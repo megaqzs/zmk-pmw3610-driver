@@ -59,7 +59,7 @@ static int (*const async_init_fn[ASYNC_INIT_STEP_COUNT])(const struct device *de
 //////// Function definitions //////////
 
 static int context_cs_ctrl(const struct device *dev, bool state) {
-	int ret = gpio_pin_set_dt(&dev->config.cs_gpio, state);
+	int ret = gpio_pin_set_dt(&(dev->config.cs_gpio), state);
 	if (ret) LOG_ERR("failed to set cs line");
 	return ret;
 }
