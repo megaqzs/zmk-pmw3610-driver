@@ -60,7 +60,14 @@ static int (*const async_init_fn[ASYNC_INIT_STEP_COUNT])(const struct device *de
 
 static int context_cs_ctrl(const struct device *dev, bool state) {
 	const struct pixart_config *cfg = dev->config;
-	int ret = gpio_pin_set_dt(&(cfg->cs_gpio), state);
+    int ret;
+    if (state) {
+        k_sleep(K_USEC(1)); // add cs line delay
+        ret = gpio_pin_set_dt(&(cfg->cs_gpio), 1);
+    } else {
+        ret = gpio_pin_set_dt(&(cfg->cs_gpio), 0);
+        k_sleep(K_USEC(1));
+    }
 	if (ret) LOG_ERR("failed to set cs line");
 	return ret;
 }
