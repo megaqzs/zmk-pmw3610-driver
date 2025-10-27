@@ -348,7 +348,8 @@ static int pmw3610_set_interrupt(const struct device *dev, const bool en) {
 }
 
 static int pmw3610_async_init_power_up(const struct device *dev) {
-  	int ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_INACTIVE);
+	const struct pixart_config *cfg = dev->config;
+  	int ret = gpio_pin_configure_dt(&(cfg->cs_gpio), GPIO_OUTPUT_INACTIVE);
     if (ret < 0) {
         return ret;
     }
