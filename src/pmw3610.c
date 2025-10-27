@@ -35,7 +35,7 @@ enum pmw3610_init_step {
 //   Thus, k_sleep or delayed schedule can be used.
 static const int32_t async_init_delay[ASYNC_INIT_STEP_COUNT] = {
     [ASYNC_INIT_STEP_POWER_UP] = 10 + CONFIG_PMW3610_INIT_POWER_UP_EXTRA_DELAY_MS, // >10ms needed
-    [ASYNC_INIT_STEP_CLEAR_OB1] = 200, // 150 us required, test shows too short,
+    [ASYNC_INIT_STEP_CLEAR_OB1] = 220, // 150 us required, test shows too short,
                                        // also power-up reset is added in this step, thus using 50 ms
     [ASYNC_INIT_STEP_CHECK_OB1] = 50,  // 10 ms required in spec,
                                        // test shows too short,
@@ -349,7 +349,7 @@ static int pmw3610_set_interrupt(const struct device *dev, const bool en) {
 
 static int pmw3610_async_init_power_up(const struct device *dev) {
 	const struct pixart_config *cfg = dev->config;
-  	int ret = gpio_pin_configure_dt(&(cfg->cs_gpio), GPIO_OUTPUT_INACTIVE);
+  	int ret = gpio_pin_configure_dt(&(cfg->cs_gpio), GPIO_OUTPUT_ACTIVE);
     if (ret < 0) {
         return ret;
     }
