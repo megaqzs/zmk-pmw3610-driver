@@ -515,7 +515,7 @@ static int pmw3610_report_data(const struct device *dev) {
 
     int16_t x = TOINT16((buf[PMW3610_X_L_POS] + ((buf[PMW3610_XY_H_POS] & 0xF0) << 4)), 12);
     int16_t y = TOINT16((buf[PMW3610_Y_L_POS] + ((buf[PMW3610_XY_H_POS] & 0x0F) << 8)), 12);
-    LOG_DBG("x/y: %d/%d", x, y);
+    LOG_INF("x/y: %d/%d", x, y);
 
 #ifdef CONFIG_PMW3610_SMART_ALGORITHM
     int16_t shutter = ((int16_t)(buf[PMW3610_SHUTTER_H_POS] & 0x01) << 8) 
