@@ -585,6 +585,7 @@ static void pmw3610_gpio_callback(const struct device *gpiob, struct gpio_callba
 static void pmw3610_work_callback(struct k_work *work) {
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
     const struct device *dev = data->dev;
+    LOG_INF("work callback");
     pmw3610_report_data(dev);
     pmw3610_set_interrupt(dev, true);
 }
