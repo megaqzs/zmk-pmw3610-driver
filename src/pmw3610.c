@@ -81,7 +81,8 @@ static int pmw3610_read(const struct device *dev, uint8_t addr, uint8_t *value, 
 		{ .buf = value, .len = len, },
 	};
 	const struct spi_buf_set rx = { .buffers = rx_buf, .count = ARRAY_SIZE(rx_buf) };
-	return context_cs_ctrl(dev, 1) || spi_transceive_dt(&cfg->spi, &tx, &rx) || context_cs_ctrl(dev, 0);
+    int ret = context_cs_ctrl(dev, 1) || spi_transceive_dt(&cfg->spi, &tx, &rx);
+	return ret + context_cs_ctrl(dev, 0);
 }
 
 static int pmw3610_read_reg(const struct device *dev, uint8_t addr, uint8_t *value) {
@@ -93,7 +94,8 @@ static int pmw3610_write_reg(const struct device *dev, uint8_t addr, uint8_t val
 	uint8_t write_buf[] = {addr | SPI_WRITE_BIT, value};
 	const struct spi_buf tx_buf = { .buf = write_buf, .len = sizeof(write_buf), };
 	const struct spi_buf_set tx = { .buffers = &tx_buf, .count = 1, };
-	return context_cs_ctrl(dev, 1) || spi_write_dt(&cfg->spi, &tx) || context_cs_ctrl(dev, 1);
+	int ret = context_cs_ctrl(dev, 1) || spi_write_dt(&cfg->spi, &tx);
+    return ret + context_cs_ctrl(dev, 1);
 }
 
 static int pmw3610_write(const struct device *dev, uint8_t reg, uint8_t val) {
