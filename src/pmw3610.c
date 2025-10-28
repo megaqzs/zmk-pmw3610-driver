@@ -122,10 +122,14 @@ static int pmw3610_set_cpi(const struct device *dev, uint32_t cpi) {
         return -EINVAL;
     }
 
+	pmw3610_write_reg(dev, PMW3610_REG_SPI_CLK_ON_REQ, PMW3610_SPI_CLOCK_CMD_ENABLE);
+	k_sleep(K_USEC(T_CLOCK_ON_DELAY_US));
+
     uint8_t value;
     int err = pmw3610_read_reg(dev, PMW3610_REG_RES_STEP, &value);
     if (err) {
         LOG_ERR("Can't read res step %d", err);
+        pmw3610_write_reg(dev, PMW3610_REG_SPI_CLK_ON_REQ, PMW3610_SPI_CLOCK_CMD_DISABLE);
         return err;
     }
     LOG_INF("Get res step register (reg value 0x%x)", value);
@@ -140,9 +144,6 @@ static int pmw3610_set_cpi(const struct device *dev, uint32_t cpi) {
     /* set the cpi */
     uint8_t addr[] = {0x7F, PMW3610_REG_RES_STEP, 0x7F};
     uint8_t data[] = {0xFF, value, 0x00};
-
-	pmw3610_write_reg(dev, PMW3610_REG_SPI_CLK_ON_REQ, PMW3610_SPI_CLOCK_CMD_ENABLE);
-	k_sleep(K_USEC(T_CLOCK_ON_DELAY_US));
 
     /* Write data */
     for (size_t i = 0; i < sizeof(data); i++) {
